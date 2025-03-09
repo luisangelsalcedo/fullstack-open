@@ -1,11 +1,11 @@
 import { Part } from './Part';
 
-export function Content({ data }) {
+export function Content({ parts }) {
   return (
     <div>
-      <Part partname={data.part1.name} exercises={data.part1.exercises} />
-      <Part partname={data.part2.name} exercises={data.part2.exercises} />
-      <Part partname={data.part3.name} exercises={data.part3.exercises} />
+      <Part partname={parts[0].name} exercises={parts[0].exercises} />
+      <Part partname={parts[1].name} exercises={parts[1].exercises} />
+      <Part partname={parts[2].name} exercises={parts[2].exercises} />
     </div>
   );
 }
