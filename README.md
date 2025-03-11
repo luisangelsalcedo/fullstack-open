@@ -20,3 +20,6 @@ Exercises for the open fullstack course
   - ✅ 1.9: Unicafe, step 4
   - ✅ 1.10: Unicafe, step 5
   - ✅ 1.11: Unicafe, step 6
+  - ✅ 1.12: Anectotes, step 1
+  - ✅ 1.13: Anectotes, step 2
+  - ✅ 1.14: Anectotes, step 3
