@@ -13,15 +13,27 @@ export function App() {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(0);
 
   const onNextAnecdote = () => {
     const randomNum = Math.round(Math.random() * (anecdotes.length - 1));
     setSelected(randomNum);
   };
 
+  const makeVote = () => {
+    setVotes((state) => ({
+      ...state,
+      [selected]: (state[selected] || 0) + 1,
+    }));
+  };
+
   return (
     <>
-      <p>{anecdotes[selected]}</p>
+      <p>
+        {anecdotes[selected]} <br />
+        <small>has {votes[selected] ?? 0} votes</small>
+      </p>
+      <button onClick={makeVote}>vote</button>
       <button onClick={onNextAnecdote}>next anecdote</button>
     </>
   );
