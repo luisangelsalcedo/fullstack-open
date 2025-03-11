@@ -8,14 +8,18 @@ const Statistics = ({ good, bad, neutral }) => {
   return (
     <>
       <h2>statistics</h2>
-      <p>
-        good {good} <br />
-        neutral {neutral} <br />
-        bad {bad} <br />
-        all {all} <br />
-        average {average} <br />
-        positive {positive}% <br />
-      </p>
+      {!all ? (
+        'No Feedback given'
+      ) : (
+        <p>
+          good {good} <br />
+          neutral {neutral} <br />
+          bad {bad} <br />
+          all {all} <br />
+          average {average} <br />
+          positive {positive}% <br />
+        </p>
+      )}
     </>
   );
 };
