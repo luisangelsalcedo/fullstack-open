@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Anecdote } from "./components/Anecdote";
 
 export function App() {
   const anecdotes = [
@@ -13,7 +14,7 @@ export function App() {
   ];
 
   const [selected, setSelected] = useState(0);
-  const [votes, setVotes] = useState(0);
+  const [votes, setVotes] = useState({});
 
   const onNextAnecdote = () => {
     const randomNum = Math.round(Math.random() * (anecdotes.length - 1));
@@ -27,14 +28,34 @@ export function App() {
     }));
   };
 
+  const getMostVotedIndex = () => {
+    if (Object.keys(votes).length === 0) return null;
+
+    const mostVotedIndex = Object.entries(votes).reduce(
+      (max, [key, value]) => (value > votes[max] ? key : max),
+      Object.keys(votes)[0]
+    );
+
+    return mostVotedIndex;
+  };
+
   return (
     <>
-      <p>
-        {anecdotes[selected]} <br />
-        <small>has {votes[selected] ?? 0} votes</small>
-      </p>
+      <h3>Anecdote of the day</h3>
+      <Anecdote votes={votes[selected]}>{anecdotes[selected]}</Anecdote>
       <button onClick={makeVote}>vote</button>
       <button onClick={onNextAnecdote}>next anecdote</button>
+
+      {!!Object.values(votes).length && (
+        <>
+          <h3>Anecdote with most votes</h3>
+          <Anecdote votes={votes[getMostVotedIndex()]}>
+            {anecdotes[getMostVotedIndex()]}
+          </Anecdote>
+        </>
+      )}
+
+      <br />
     </>
   );
 }
