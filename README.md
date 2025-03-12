@@ -23,3 +23,9 @@ Exercises for the open fullstack course
   - ✅ 1.12: Anectotes, step 1
   - ✅ 1.13: Anectotes, step 2
   - ✅ 1.14: Anectotes, step 3
+- Part 2️⃣
+  - ✅ 2.1: Course Information, step 6
+  - ✅ 2.2: Course Information, step 7
+  - ✅ 2.3: Course Information, step 8
+  - ✅ 2.4: Course Information, step 9
+  - ✅ 2.5: Course Information, step 10
