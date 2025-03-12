@@ -6,11 +6,21 @@ export function App() {
 
   const addNewName = (e) => {
     e.preventDefault();
+    // validations
     if (!newName || newName.length < 2) return;
+    if (checkRepeatedName(newName)) return;
 
     const person = { name: newName };
     setPersons((state) => [...state, person]);
     setNewName("");
+  };
+
+  const checkRepeatedName = (name) => {
+    if (persons.some((person) => person.name === name)) {
+      alert(`${name} is already added to phonebook`);
+      return true;
+    }
+    return false;
   };
 
   return (
