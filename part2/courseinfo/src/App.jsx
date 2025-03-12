@@ -1,6 +1,4 @@
-import { Content } from './components/Content';
-import { Header } from './components/Header';
-import { Total } from './components/Total';
+import { Course } from './components/Course';
 
 export function App() {
   // const-definitions
@@ -52,13 +50,8 @@ export function App() {
   return (
     <div>
       <h1>Web development curriculum</h1>
-      {courses.map(({ id, name, parts }) => (
-        <div key={id}>
-          <Header course={name}></Header>
-          <Content parts={parts} />
-          <Total parts={parts} />
-          <hr />
-        </div>
+      {courses.map((course) => (
+        <Course key={course.id} course={course} />
       ))}
     </div>
   );
