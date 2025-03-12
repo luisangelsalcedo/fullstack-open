@@ -3,12 +3,8 @@ import { Part } from './Part';
 export function Content({ parts }) {
   return (
     <div>
-      {parts.map((course) => (
-        <Part
-          key={course.id}
-          partname={course.name}
-          exercises={course.exercises}
-        />
+      {parts.map(({ id, name, exercises }) => (
+        <Part key={id} partname={name} exercises={exercises} />
       ))}
     </div>
   );

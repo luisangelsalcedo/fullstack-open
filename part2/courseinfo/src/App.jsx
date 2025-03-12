@@ -4,48 +4,62 @@ import { Total } from './components/Total';
 
 export function App() {
   // const-definitions
-  const course = {
-    id: 1,
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10,
-        id: 1,
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7,
-        id: 2,
-      },
-      {
-        name: 'State of a component',
-        exercises: 14,
-        id: 3,
-      },
-      {
-        name: 'React',
-        exercises: 14,
-        id: 4,
-      },
-      {
-        name: 'Angular',
-        exercises: 14,
-        id: 5,
-      },
-      {
-        name: 'Vue',
-        exercises: 14,
-        id: 6,
-      },
-    ],
-  };
+  const courses = [
+    {
+      name: 'Half Stack application development',
+      id: 1,
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10,
+          id: 1,
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7,
+          id: 2,
+        },
+        {
+          name: 'State of a component',
+          exercises: 14,
+          id: 3,
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4,
+        },
+      ],
+    },
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1,
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2,
+        },
+      ],
+    },
+  ];
 
   return (
     <div>
-      <Header course={course.name}></Header>
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
+      <h1>Web development curriculum</h1>
+      {courses.map(({ id, name, parts }) => (
+        <div key={id}>
+          <Header course={name}></Header>
+          <Content parts={parts} />
+          <Total parts={parts} />
+          <hr />
+        </div>
+      ))}
     </div>
   );
 }
