@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Filter, PersonForm, Persons } from "./components";
 import axios from "axios";
 
+const apiURL = "http://localhost:3001/persons";
+
 export function App() {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
@@ -9,7 +11,6 @@ export function App() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    const apiURL = "http://localhost:3001/persons";
     axios.get(apiURL).then(({ data }) => setPersons(data));
   }, []);
 
@@ -18,8 +19,11 @@ export function App() {
     // validations
     if (checkIsValidName(newName) || checkIsValidNumber(newPhone)) return;
 
-    const person = { name: newName, number: newPhone };
-    setPersons((state) => [...state, person]);
+    const newPerson = { name: newName, number: newPhone };
+    setPersons((state) => [...state, newPerson]);
+
+    //save on server
+    axios.post(apiURL, newPerson).then(console.log);
 
     // clear
     setNewName("");
