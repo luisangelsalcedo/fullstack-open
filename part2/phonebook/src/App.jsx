@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Filter, PersonForm, Persons } from "./components";
-import { create, getAll } from "./services/person.service";
+import { create, getAll, deleteById } from "./services/person.service";
 
 export function App() {
   const [persons, setPersons] = useState([]);
@@ -12,7 +12,7 @@ export function App() {
     getAll().then(({ data }) => setPersons(data));
   }, []);
 
-  const addNewName = (e) => {
+  const addPerson = (e) => {
     e.preventDefault();
     // validations
     if (checkIsValidName(newName) || checkIsValidNumber(newPhone)) return;
@@ -26,6 +26,15 @@ export function App() {
     // clear
     setNewName("");
     setNewPhone("");
+  };
+
+  const deletePerson = (id) => {
+    if (window.confirm("Do you really want to eliminate it?")) {
+      setPersons((state) => state.filter((person) => person.id !== id));
+
+      //delete from server
+      deleteById(id).then(console.log);
+    }
   };
 
   const checkIsValidNumber = (value) => {
@@ -76,7 +85,7 @@ export function App() {
 
       <h2>add a new</h2>
       <PersonForm
-        action={addNewName}
+        action={addPerson}
         name={newName}
         handlerName={setNewName}
         phone={newPhone}
@@ -84,7 +93,7 @@ export function App() {
       />
 
       <h2>Numbers</h2>
-      <Persons data={personsToShow} />
+      <Persons data={personsToShow} handlerDelete={deletePerson} />
     </div>
   );
 }
