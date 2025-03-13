@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Filter, PersonForm, Persons } from "./components";
-import axios from "axios";
-
-const apiURL = "http://localhost:3001/persons";
+import { create, getAll } from "./services/person.service";
 
 export function App() {
   const [persons, setPersons] = useState([]);
@@ -11,7 +9,7 @@ export function App() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    axios.get(apiURL).then(({ data }) => setPersons(data));
+    getAll().then(({ data }) => setPersons(data));
   }, []);
 
   const addNewName = (e) => {
@@ -23,7 +21,7 @@ export function App() {
     setPersons((state) => [...state, newPerson]);
 
     //save on server
-    axios.post(apiURL, newPerson).then(console.log);
+    create(newPerson).then(console.log);
 
     // clear
     setNewName("");
