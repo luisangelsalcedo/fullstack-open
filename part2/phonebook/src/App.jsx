@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { Filter, PersonForm, Persons } from "./components";
-import { create, getAll, deleteById } from "./services/person.service";
+import {
+  create,
+  getAll,
+  deleteById,
+  updateById,
+} from "./services/person.service";
 
 export function App() {
   const [persons, setPersons] = useState([]);
@@ -18,22 +23,50 @@ export function App() {
     if (checkIsValidName(newName) || checkIsValidNumber(newPhone)) return;
 
     const newPerson = { name: newName, number: newPhone };
-    setPersons((state) => [...state, newPerson]);
+    const foundPerson = persons.find(
+      (person) => person.name === newPerson.name
+    );
 
-    //save on server
-    create(newPerson).then(console.log);
+    if (foundPerson) {
+      updatePerson(foundPerson, newPerson);
+    } else {
+      createPerson(newPerson);
+    }
 
     // clear
     setNewName("");
     setNewPhone("");
   };
 
+  const createPerson = (newPerson) => {
+    // create on state
+    setPersons((state) => [...state, newPerson]);
+    //save on server
+    create(newPerson).then(console.log);
+  };
+
   const deletePerson = (id) => {
-    if (window.confirm("Do you really want to eliminate it?")) {
+    const message = `Do you really want to eliminate it?`;
+    if (window.confirm(message)) {
+      // delete from state
       setPersons((state) => state.filter((person) => person.id !== id));
 
-      //delete from server
+      // delete from server
       deleteById(id).then(console.log);
+    }
+  };
+
+  const updatePerson = (foundPerson, updatedPerson) => {
+    const message = `${foundPerson.name} is already added to phonebook, replace the old number with a new one?`;
+    if (window.confirm(message)) {
+      // update on state
+      setPersons((state) =>
+        state.map((person) =>
+          person.name === foundPerson.name ? updatedPerson : person
+        )
+      );
+      // update on server
+      updateById(foundPerson.id, updatedPerson).then(console.log);
     }
   };
 
@@ -41,11 +74,11 @@ export function App() {
     // eslint-disable-next-line no-useless-escape
     const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
 
-    if (!newPhone) {
+    if (!value) {
       alert(`The phone number is required`);
       return true;
     }
-    if (newPhone.length < 10) {
+    if (value.length < 10) {
       alert(`The phone number must have a min. of 10 characters`);
       return true;
     }
@@ -57,18 +90,18 @@ export function App() {
   };
 
   const checkIsValidName = (value) => {
-    if (!newName) {
+    if (!value) {
       alert(`The name is required`);
       return true;
     }
-    if (newName.length < 2) {
+    if (value.length < 2) {
       alert(`The name must have a min. of 2 characters`);
       return true;
     }
-    if (persons.some((person) => person.name === value)) {
-      alert(`${value} is already added to phonebook`);
-      return true;
-    }
+    // if (persons.some((person) => person.name === value)) {
+    //   alert(`${value} is already added to phonebook`);
+    //   return true;
+    // }
     return false;
   };
 
