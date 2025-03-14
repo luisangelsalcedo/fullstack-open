@@ -8,7 +8,9 @@ export function Persons({ data, handlerDelete }) {
           {data.map(({ name, number, id }) => (
             <li key={name}>
               {name} 📞 {number}
-              <button onClick={() => handlerDelete(id)}>delete</button>
+              {!!id && (
+                <button onClick={() => handlerDelete(id)}>delete</button>
+              )}
             </li>
           ))}
         </ol>

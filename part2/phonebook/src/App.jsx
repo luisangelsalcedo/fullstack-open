@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Filter, PersonForm, Persons } from "./components";
+import { Filter, PersonForm, Persons, Notification } from "./components";
 import {
   create,
   getAll,
@@ -12,6 +12,7 @@ export function App() {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [query, setQuery] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     getAll().then(({ data }) => setPersons(data));
@@ -23,9 +24,7 @@ export function App() {
     if (checkIsValidName(newName) || checkIsValidNumber(newPhone)) return;
 
     const newPerson = { name: newName, number: newPhone };
-    const foundPerson = persons.find(
-      (person) => person.name === newPerson.name
-    );
+    const foundPerson = findPersonByName(newPerson.name);
 
     if (foundPerson) {
       updatePerson(foundPerson, newPerson);
@@ -39,35 +38,51 @@ export function App() {
   };
 
   const createPerson = (newPerson) => {
-    // create on state
-    setPersons((state) => [...state, newPerson]);
     //save on server
-    create(newPerson).then(console.log);
+    create(newPerson).then(() => {
+      // create on state
+      setPersons((state) => [...state, newPerson]);
+      // notification
+      setNotification(`Add ${newPerson.name}`);
+    });
   };
 
   const deletePerson = (id) => {
     const message = `Do you really want to eliminate it?`;
     if (window.confirm(message)) {
-      // delete from state
-      setPersons((state) => state.filter((person) => person.id !== id));
-
+      const foundPerson = findPersonById(id);
       // delete from server
-      deleteById(id).then(console.log);
+      deleteById(id).then(() => {
+        // delete from state
+        setPersons((state) => state.filter((person) => person.id !== id));
+        // notification
+        setNotification(`${foundPerson.name} removed`);
+      });
     }
   };
 
   const updatePerson = (foundPerson, updatedPerson) => {
     const message = `${foundPerson.name} is already added to phonebook, replace the old number with a new one?`;
     if (window.confirm(message)) {
-      // update on state
-      setPersons((state) =>
-        state.map((person) =>
-          person.name === foundPerson.name ? updatedPerson : person
-        )
-      );
       // update on server
-      updateById(foundPerson.id, updatedPerson).then(console.log);
+      updateById(foundPerson.id, updatedPerson).then(() => {
+        // update on state
+        setPersons((state) =>
+          state.map((person) =>
+            person.name === foundPerson.name ? updatedPerson : person
+          )
+        );
+      });
     }
+  };
+
+  const findPersonById = (id) => persons.find((person) => person.id === id);
+  const findPersonByName = (name) =>
+    persons.find((person) => person.name === name);
+
+  const setNotification = (message) => {
+    setNotificationMessage(message);
+    setTimeout(() => setNotificationMessage(null), 3000);
   };
 
   const checkIsValidNumber = (value) => {
@@ -114,6 +129,7 @@ export function App() {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter value={query} handler={setQuery} />
 
       <h2>add a new</h2>
