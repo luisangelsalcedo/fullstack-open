@@ -52,12 +52,19 @@ export function App() {
     if (window.confirm(message)) {
       const foundPerson = findPersonById(id);
       // delete from server
-      deleteById(id).then(() => {
-        // delete from state
-        setPersons((state) => state.filter((person) => person.id !== id));
-        // notification
-        setNotification(`${foundPerson.name} removed`);
-      });
+      deleteById(id)
+        .then(() => {
+          // delete from state
+          setPersons((state) => state.filter((person) => person.id !== id));
+          // notification
+          setNotification(`${foundPerson.name} removed`);
+        })
+        .catch(() => {
+          setNotification(
+            `Information of ${foundPerson.name} has already been removed from server`,
+            "danger"
+          );
+        });
     }
   };
 
@@ -65,14 +72,23 @@ export function App() {
     const message = `${foundPerson.name} is already added to phonebook, replace the old number with a new one?`;
     if (window.confirm(message)) {
       // update on server
-      updateById(foundPerson.id, updatedPerson).then(() => {
-        // update on state
-        setPersons((state) =>
-          state.map((person) =>
-            person.name === foundPerson.name ? updatedPerson : person
-          )
-        );
-      });
+      updateById(foundPerson.id, updatedPerson)
+        .then(() => {
+          // update on state
+          setPersons((state) =>
+            state.map((person) =>
+              person.name === foundPerson.name ? updatedPerson : person
+            )
+          );
+          // notification
+          setNotification(`${foundPerson.name} updated`);
+        })
+        .catch(() => {
+          setNotification(
+            `Information of ${foundPerson.name} has already been removed from server`,
+            "danger"
+          );
+        });
     }
   };
 
@@ -80,8 +96,8 @@ export function App() {
   const findPersonByName = (name) =>
     persons.find((person) => person.name === name);
 
-  const setNotification = (message) => {
-    setNotificationMessage(message);
+  const setNotification = (message, type = "success") => {
+    setNotificationMessage({ text: message, type });
     setTimeout(() => setNotificationMessage(null), 3000);
   };
 
@@ -129,7 +145,10 @@ export function App() {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification
+        message={notificationMessage?.text}
+        type={notificationMessage?.type}
+      />
       <Filter value={query} handler={setQuery} />
 
       <h2>add a new</h2>
