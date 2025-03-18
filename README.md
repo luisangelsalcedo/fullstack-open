@@ -29,3 +29,18 @@ Exercises for the open fullstack course
   - ✅ 2.3: Course Information, step 8
   - ✅ 2.4: Course Information, step 9
   - ✅ 2.5: Course Information, step 10
+  - ✅ 2.6: The Phonebook Step 1
+  - ✅ 2.7: The Phonebook Step 2
+  - ✅ 2.8: The Phonebook Step 3
+  - ✅ 2.9: The Phonebook Step 4
+  - ✅ 2.10: The Phonebook Step 5
+  - ✅ 2.11: The Phonebook Step 6
+  - ✅ 2.12: The Phonebook Step 7
+  - ✅ 2.13: The Phonebook Step 8
+  - ✅ 2.14: The Phonebook Step 9
+  - ✅ 2.15: The Phonebook Step 10
+  - ✅ 2.16: The Phonebook Step 11
+  - ✅ 2.17: The Phonebook Step 12
+  - ✅ 2.18: Data for countries Step 1
+  - ✅ 2.19: Data for countries Step 2
+  - ✅ 2.20: Data for countries Step 3
