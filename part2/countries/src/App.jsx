@@ -24,7 +24,7 @@ export function App() {
     if (!name) return [];
 
     const filteredCountries = countries.filter((country) =>
-      country.name.common.toLowerCase().includes(name)
+      country.name.common.toLowerCase().includes(name.toLowerCase())
     );
     return filteredCountries;
   };
@@ -71,8 +71,11 @@ export function App() {
                 )}
               </>
             ) : (
-              filterContries.map((country) => (
-                <div key={country.name.common}>{country.name.common}</div>
+              filterContries.map(({ name }) => (
+                <div key={name.common}>
+                  {name.common}{' '}
+                  <button onClick={() => setQuery(name.common)}>Show</button>
+                </div>
               ))
             )}
           </div>
