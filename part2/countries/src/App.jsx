@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { getCountries } from './service/countries.service';
+import { CountryDetails, CountriesList, CountrySearchForm } from './components';
+import { getCountryWeather } from './service/weather.service';
 import {
   getLocalStorage,
   setLocalStorage,
@@ -11,25 +12,42 @@ export function App() {
   const [countries, setCountries] = useState(
     getLocalStorage('countries') ?? []
   );
+  const [weather, setWeather] = useState(null);
 
   useEffect(() => {
-    if (!countries.length)
+    if (!getLocalStorage('countries')) {
       getCountries().then(({ data }) => {
         setCountries(data);
         setLocalStorage('countries', data);
       });
-  }, [countries]);
+    }
+  }, []);
 
-  const filterContriesByname = (name) => {
-    if (!name) return [];
-
-    const filteredCountries = countries.filter((country) =>
-      country.name.common.toLowerCase().includes(name.toLowerCase())
-    );
-    return filteredCountries;
+  const getWeatherByCountry = (country) => {
+    const { latlng } = country;
+    const [lat, lng] = latlng;
+    getCountryWeather(lat, lng).then(({ data }) => setWeather(data));
   };
 
-  const filterContries = filterContriesByname(query);
+  const filteredCountries = useMemo(() => {
+    if (!query) return [];
+    return countries.filter((country) =>
+      country.name.common.toLowerCase().includes(query.toLowerCase())
+    );
+  }, [query, countries]);
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      if (filteredCountries.length === 1) {
+        getWeatherByCountry(filteredCountries[0]);
+      } else {
+        setWeather(null);
+      }
+    }, 1000);
+    return () => {
+      clearTimeout(debounce);
+    };
+  }, [filteredCountries]);
 
   return (
     <>
@@ -37,46 +55,18 @@ export function App() {
         <div>Loading...</div>
       ) : (
         <>
-          find countries:
-          <input
-            type='text'
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
+          <CountrySearchForm value={query} handler={setQuery} />
           <div>
-            {filterContries.length > 10 ? (
+            {filteredCountries.length > 10 ? (
               <p>Too many matches, specify another filter</p>
             ) : //
-            filterContries.length === 1 ? (
-              <>
-                <h1>{filterContries[0].name.official}</h1>
-                <p>
-                  Capital {filterContries[0].capital} <br />
-                  Area {filterContries[0].area} <br />
-                </p>
-                <h2>Languages</h2>
-                <ul>
-                  {Object.values(filterContries[0].languages).map(
-                    (language) => (
-                      <li key={language}>{language}</li>
-                    )
-                  )}
-                </ul>
-                {!filterContries[0].flag.svg && (
-                  <img
-                    src={filterContries[0].flags.png}
-                    alt={filterContries[0].flags.alt}
-                    width='300px'
-                  />
-                )}
-              </>
+            filteredCountries.length === 1 ? (
+              <CountryDetails
+                country={filteredCountries[0]}
+                weather={weather}
+              />
             ) : (
-              filterContries.map(({ name }) => (
-                <div key={name.common}>
-                  {name.common}{' '}
-                  <button onClick={() => setQuery(name.common)}>Show</button>
-                </div>
-              ))
+              <CountriesList countries={filteredCountries} handler={setQuery} />
             )}
           </div>
         </>
